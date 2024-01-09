@@ -1,0 +1,6 @@
+[submodule "sotalya/pycli/libs/pybind11"]
+	path = sotalya/pycli/libs/pybind11
+	url = https://github.com/pybind/pybind11.git
+[submodule "sotalya/tucuxi-core"]
+	path = sotalya/tucuxi-core
+	url = ../tucuxi-core.git
