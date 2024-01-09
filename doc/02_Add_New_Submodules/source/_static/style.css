@@ -1,0 +1,28 @@
+h1, h2, h3, h4
+{
+	font-family: Arial;
+}
+
+p
+{
+	text-align: justify;
+}
+
+.orange
+{
+	color: #f28b37;
+}
+
+/*
+table
+{
+	text-align: center;
+}
+*/
+
+/*sert à rien apparement
+head > title
+{
+	font-family: Arial;
+}
+*/

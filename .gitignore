@@ -1,0 +1,10 @@
+build/
+_build/
+_skbuild/
+dist/
+*.egg-info/
+__pycache__
+
+_generate/
+
+.idea
