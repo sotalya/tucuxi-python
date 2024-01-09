@@ -1,0 +1,1 @@
+https://cibuildwheel.readthedocs.io/en/stable/deliver-to-pypi/
