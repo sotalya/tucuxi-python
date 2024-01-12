@@ -34,7 +34,7 @@ def test_compute_tqf():
                 data = file.read()
             file.close()
 
-            xml_string = pycli.compute_tqf(data, self.drugfiles_path)
+            xml_string = pycli.compute_tqf(data, drugfiles_path)
 
             # Read xml string as tree and check that all requests went right
             tree = ET.fromstring(xml_string)
