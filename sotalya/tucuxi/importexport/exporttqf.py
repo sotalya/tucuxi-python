@@ -27,7 +27,7 @@ class ExportTqf:
 
         self.soup.query.queryId.string = query.queryId
         self.soup.query.clientId.string = query.patientId
-        self.soup.query.date.string = query.date
+        self.soup.query.date.string = str(query.date)
 
         for d in query.drugs:
             self.soup.query.drugs.drug.drugId.string = d.drugId
@@ -89,7 +89,10 @@ class ExportTqf:
 
     def create_single_node_date(self, tag_name, tag_value):
         node = self.soup.new_tag(tag_name)
-        node.string = tag_value.strftime("%Y-%m-%dT%H:%M:%S")
+        if (type(tag_value) is datetime):
+            node.string = tag_value.strftime("%Y-%m-%dT%H:%M:%S")
+        else:
+            node.string = tag_value
         return node
 
     def create_computing_option(self, request):
