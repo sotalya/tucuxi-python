@@ -384,6 +384,9 @@ class Dose:
             infusion = soup.infusionTimeInMinutes.string
             self.infusionTimeInMinutes = timedelta(minutes=float(infusion))
 
+    def get_infusion_time_in_minutes(self):
+        return self.infusionTimeInMinutes.total_seconds() // 60
+
 
 class LastingDosage:
     interval: timedelta
