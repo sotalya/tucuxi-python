@@ -234,7 +234,7 @@ class ExportTqf:
         dose.append(self.create_single_node_double('value', the_dose.dosage.dose.value))
         dose.append(self.create_single_node_double('unit', the_dose.dosage.dose.unit))
         # Todo : manage units for this
-        dose.append(self.create_single_node_double('infusionTimeInMinutes', the_dose.dosage.dose.infusionTimeInMinutes))
+        dose.append(self.create_single_node_double('infusionTimeInMinutes', the_dose.dosage.dose.get_infusion_time_in_minutes()))
         lasting_dosage.append(dose)
 
         formulation_and_route = self.soup.new_tag('formulationAndRoute')
