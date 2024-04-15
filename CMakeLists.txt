@@ -5,7 +5,7 @@ project(sotalya LANGUAGES CXX)
 add_compile_definitions(_GLIBCXX_USE_CXX11_ABI=0)
 
 # Language
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -40,9 +40,9 @@ if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /UMBCS /D_UNICODE /DUNICODE")
 elseif (APPLE)
     add_definitions(-DUNIX)
-    # enable c++17
+    # enable c++20
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
     add_compile_options(-Wno-deprecated-declarations)
 else (UNIX)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fsplit-stack -fno-lto -g")
