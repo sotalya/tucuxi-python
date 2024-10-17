@@ -17,7 +17,7 @@ The python module can be build using pip. Currently two way are available.
   
 Moreover, a setup.bat and setup.sh are available to directly install the package.
 
-<sup>**NOTE: The ways of installing explained above will install the package as a global one. So, if you want to install it inside a vistual environment \
+<sup>**NOTE: The ways of installing explained above will install the package as a global one. So, if you want to install it inside a virtual environment \
 dont use them.**<sup>
 
 ## PyTest

@@ -7,7 +7,7 @@ from ..importexport.exporttqf import *
 from ..tucuxi.utils import CliStatusCode
 from ..data.requests import *
 from ..pycli import compute_tqf
-import requests
+# import requests
 
 
 class TucuxiRun:
