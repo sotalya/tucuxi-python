@@ -1,4 +1,11 @@
-# Tucuxi Python All
+# Tucuxi Python
+
+This repository offers python wrappers to Tucuxi-core, for computing dosage predictions, percentiles, and adjustments.
+
+It embeds tucuxi-core and will compile it during installation.
+
+Using python can then be done using the embedded tucuxi-core, or by launching tucucli, the Tucuxi command line tool.
+
 
 ## Install the package
 
@@ -6,19 +13,18 @@ The python module can be build using pip. Currently two way are available.
 
 - The first one will be to clone this repository and then execute the pip install command \
   ```
-   $ git clone --recursive https://reds-gitlab.heig-vd.ch/reds-tucuxi/tucuxi-python.git
+   $ git clone --recursive https://github.com/sotalya/tucuxi-python.git
    $ cd tucuxi-python
    $ pip install .
   ```
 - The second one will be to install the package using the git link directly with pip install \
   ```
-   $ pip install git+https://reds-gitlab.heig-vd.ch/reds-tucuxi/tucuxi-python.git
+   $ pip install https://github.com/sotalya/tucuxi-python.git
   ```
   
 Moreover, a setup.bat and setup.sh are available to directly install the package.
 
-<sup>**NOTE: The ways of installing explained above will install the package as a global one. So, if you want to install it inside a virtual environment \
-dont use them.**<sup>
+<sup>**NOTE: The ways of installing explained above will install the package as a global one. So, if you want to install it inside a virtual environment dont use them or from within the environment.**<sup>
 
 ## PyTest
 
