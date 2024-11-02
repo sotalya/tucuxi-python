@@ -12,16 +12,60 @@ from ..tucuxi.utils import timedelta_to_str
 #     PercentilesTraits, AdjustmentTraits
 
 
+tqf_template = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<query version="1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="xml_query.xsd">
+
+    <queryId></queryId>
+    <clientId></clientId>
+    <date></date> <!-- Date the xml has been sent -->
+    <language>en</language>
+
+    <drugTreatment>
+        <!-- All the information regarding the patient -->
+        <patient>
+            <covariates>
+            </covariates>
+        </patient>
+        <!-- List of the drugs informations we have concerning the patient -->
+        <drugs>
+            <!-- All the information regarding the drug -->
+            <drug>
+                <drugId></drugId>
+                <activePrinciple></activePrinciple>
+                <brandName></brandName>
+                <atc></atc>
+                <!-- All the information regarding the treatment -->
+                <treatment>
+                    <dosageHistory>
+                    </dosageHistory>
+                </treatment>
+                <!-- Samples history -->
+                <samples>
+                </samples>
+            </drug>
+        </drugs>
+    </drugTreatment>
+    <!-- List of the requests we want the server to take care of -->
+    <requests></requests>
+	
+</query>
+'''
+
 class ExportTqf:
     def __init__(self):
         print('create a TQF exporter')
         self.soup = None
 
 
-    def export_to_string(self, query: Query, template_filename):
+    def export_to_string(self, query: Query, template_filename: str = ''):
         print('exporting a TQF')
 
-        content = open(template_filename).read()
+        if template_filename == '':
+            content = tqf_template
+        else:
+            content = open(template_filename).read()
 
         self.soup = BeautifulSoup(content, 'xml')
 
@@ -59,7 +103,7 @@ class ExportTqf:
 
         return dom_string
 
-    def export_to_file(self, query: Query, filename, template_filename):
+    def export_to_file(self, query: Query, filename, template_filename: str = ''):
 
         dom_string = self.export_to_string(query, template_filename)
 

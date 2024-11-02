@@ -8,6 +8,193 @@ import xml.dom.minidom
 from ..tucuxi.utils import timedelta_to_str
 
 
+list_template = '''<?xml version="1.0"?>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" controlId="1234" errorCondition="OK" lang="fr" type="reply_list" version="0.2" xsi:noNamespaceSchemaLocation="eep.xsd">
+  <request>
+    <requestId></requestId>
+    <requestState></requestState>
+    <patient>
+      <name>
+        <firstName></firstName>
+        <middleName/>
+        <lastName></lastName>
+      </name>
+      <institute>
+        <instituteId/>
+        <name/>
+      </institute>
+      <patientId></patientId>
+      <stayNumber></stayNumber>
+      <birthdate></birthdate>
+      <gender></gender>
+      <comments/>
+    </patient>
+    <mandator>
+      <name>
+        <firstName/>
+        <middleName/>
+        <lastName/>
+      </name>
+      <contact>
+        <address/>
+        <city/>
+        <postcode/>
+        <state/>
+        <country/>
+        <emails>
+          <email type=""/>
+        </emails>
+        <phones>
+          <phone type=""/>
+        </phones>
+      </contact>
+      <institute>
+        <instituteId/>
+        <name/>
+        <contact>
+          <address/>
+          <city/>
+          <postcode/>
+          <state/>
+          <country/>
+          <emails>
+          </emails>
+          <phones>
+          </phones>
+        </contact>
+      </institute>
+      <practicianId/>
+      <title/>
+      <birthdate/>
+      <gender/>
+      <comments/>
+    </mandator>
+    <sample>
+      <id></id>
+      <sampleDate></sampleDate>
+      <arrivalDate></arrivalDate>
+      <concentrations>
+        <concentration>
+          <analyte></analyte>
+          <value></value>
+          <unit></unit>
+        </concentration>
+      </concentrations>
+      <comments/>
+    </sample>
+    <drug>
+      <drugId></drugId>
+      <atc/>
+      <brandName></brandName>
+      <activePrinciple></activePrinciple>
+      <comments/>
+    </drug>
+  </request>
+</data>
+'''
+
+pending_request_template = '''<?xml version="1.0"?>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" controlId="cId" errorCondition="OK" lang="FRA" type="reply_request" version="0.2" xsi:noNamespaceSchemaLocation="eep.xsd">
+  <dataset>
+    <requestId></requestId>
+    <requestState></requestState>
+    <drug>
+      <drugId></drugId>
+      <atc/>
+      <brandName></brandName>
+      <activePrinciple></activePrinciple>
+      <comments/>
+    </drug>
+    <dosages>
+    </dosages>
+    <samples>
+    </samples>
+    <covariates>
+    </covariates>
+    <clinicals>
+    </clinicals>
+    <patient>
+      <name>
+        <firstName></firstName>
+        <middleName/>
+        <lastName></lastName>
+      </name>
+      <contact>
+        <address/>
+        <city/>
+        <postcode/>
+        <state/>
+        <country/>
+        <emails>
+        </emails>
+        <phones>
+        </phones>
+      </contact>
+      <institute>
+        <instituteId/>
+        <name/>
+        <contact>
+          <address/>
+          <city/>
+          <postcode/>
+          <state/>
+          <country/>
+          <emails>
+          </emails>
+          <phones>
+          </phones>
+        </contact>
+      </institute>
+      <patientId></patientId>
+      <stayNumber></stayNumber>
+      <birthdate></birthdate>
+      <gender></gender>
+      <comments/>
+    </patient>
+    <mandator>
+      <name>
+        <firstName/>
+        <middleName/>
+        <lastName/>
+      </name>
+      <contact>
+        <address/>
+        <city/>
+        <postcode/>
+        <state/>
+        <country/>
+        <emails>
+          <email type=""/>
+        </emails>
+        <phones>
+          <phone type=""/>
+        </phones>
+      </contact>
+      <institute>
+        <instituteId/>
+        <name/>
+        <contact>
+          <address/>
+          <city/>
+          <postcode/>
+          <state/>
+          <country/>
+          <emails>
+          </emails>
+          <phones>
+          </phones>
+        </contact>
+      </institute>
+      <practicianId/>
+      <title/>
+      <birthdate/>
+      <gender/>
+      <comments/>
+    </mandator>
+  </dataset>
+</data>
+'''
+
 class ExportPendingRequest:
     def __init__(self):
         print('create a Pending request exporter')
@@ -33,7 +220,7 @@ class ExportPendingRequest:
         node.string = tag_value.strftime("%Y-%m-%dT%H:%M:%S")
         return node
 
-    def export_list_to_file(self, pending_requests, filename, template_filename):
+    def export_list_to_file(self, pending_requests, filename, template_filename:str = ''):
 
         """
         Export a list of pending requests in XML format.
@@ -45,7 +232,10 @@ class ExportPendingRequest:
 
         print('exporting the list of pending requests')
 
-        content = open(template_filename).read()
+        if template_filename == '':
+            content = list_template
+        else:
+            content = open(template_filename).read()
 
         self.soup = BeautifulSoup(content, 'xml')
 
@@ -100,7 +290,7 @@ class ExportPendingRequest:
         outputfile.close()
         return True
 
-    def export_to_file(self, pending_request, filename, template_filename):
+    def export_to_file(self, pending_request, filename, template_filename:str = ''):
 
         """
         Export a pending request in XML format.
@@ -112,7 +302,10 @@ class ExportPendingRequest:
 
         print('exporting a pending request')
 
-        content = open(template_filename).read()
+        if template_filename == '':
+            conent = pending_request_template
+        else:
+            content = open(template_filename).read()
 
         self.soup = BeautifulSoup(content, 'xml')
 
