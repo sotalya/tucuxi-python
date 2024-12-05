@@ -303,7 +303,7 @@ class ExportPendingRequest:
         print('exporting a pending request')
 
         if template_filename == '':
-            conent = pending_request_template
+            content = pending_request_template
         else:
             content = open(template_filename).read()
 
