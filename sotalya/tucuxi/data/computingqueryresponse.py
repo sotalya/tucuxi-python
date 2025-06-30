@@ -218,9 +218,46 @@ def choose_dosage(soup):
         dosage = LastingDosageResponse(soup.lastingDosage)
     elif soup.dailyDosage:
         dosage = DailyDosageResponse(soup.dailyDosage)
-    else:
+    elif soup.weeklyDosage:
         dosage = WeeklyDosageResponse(soup.weeklyDosage)
+    elif soup.singleDoseAtTimeList:
+        dosage = SingleDoseAtTimeListResponse(soup.singleDoseAtTimeList)
+    elif soup.simpleDoseList:
+        dosage = SimpleDoseListResponse(soup.simpleDoseList)
+    else:
+        raise RuntimeError('Invalid dosage response type')
     return dosage
+
+
+class SimpleDoseListResponse:
+    def __init__(self, soup):
+        self.doseDateValues = []
+        self.doseUnit = soup.doseUnit.string
+        self.formulationAndRoute = FormulationAndRoute(soup.formulationAndRoute)
+        for dose in soup.doseList.find_all('doseDateValue'):
+            doseDate = str_to_datetime(dose.doseDate.string)
+            infusionTime = timedelta(minutes=float(dose.infusionTimeInMinutes.string))
+            doseValue = float(dose.doseValue.string)
+            self.doseDateValues.append((doseDate,
+                                        infusionTime,
+                                        doseValue))
+
+
+class SingleDoseAtTimeResponse:
+    def __init__(self, soup):
+        self.doseDate = str_to_datetime(soup.doseDate.string)
+        infusion = soup.infusionTimeInMinutes.string
+        self.infusionTime = timedelta(minutes=float(infusion))
+        self.doseValue = float(soup.doseValue.string)
+        self.doseUnit = soup.doseUnit.string
+        self.formulationAndRoute = FormulationAndRoute(soup.formulationAndRoute)
+
+
+class SingleDoseAtTimeListResponse:
+    def __init__(self, soup):
+        self.doseList = []
+        for d in h.find_all('singleDoseAtTime'):
+            self.doseList.append(SingleDoseAtTimeResponse(d))
 
 
 class LastingDosageResponse:
@@ -245,14 +282,11 @@ class WeeklyDosageResponse:
         self.dose = Dose(soup.dose)
         self.formulationAndRoute = FormulationAndRoute(soup.formulationAndRoute)
 
-
 class FormulationAndRoute:
     def __init__(self, soup):
         self.formulation = soup.formulation.string
         self.administrationName = soup.administrationName.string
         self.administrationRoute = soup.administrationRoute.string
-        self.absorptionModel = soup.absorptionModel.string
-
 
 class Dose:
     def __init__(self, soup):

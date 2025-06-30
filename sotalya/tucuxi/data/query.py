@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, time
 from colorama import Fore
 from ..tucuxi.utils import str_to_datetime, str_to_time
 from ..data.requests import Request
+from ..data.xpertrequests import XpertRequest
 from typing import List
 
 
@@ -22,6 +23,7 @@ class Query:
         self.covariates = []
         self.drugs = []
         self.requests = []
+        self.xpertrequests = []
 
         if soup is not None:
             self.queryId = soup.query.queryId.string
@@ -34,6 +36,10 @@ class Query:
             if soup.query.requests:
                 for r in soup.query.requests.find_all('request'):
                     self.requests.append(Request.create_from_soup(r))
+
+            if soup.query.xpertrequests:
+                for r in soup.query.xpertrequests.find_all('xpertrequest'):
+                    self.xpertrequests.append(XpertRequest.create_from_soup(r))
 
         self.isgenerated = False
 
@@ -320,6 +326,7 @@ class DosageRepeat:
     def is_valid(self)-> bool:
         return self.dosage.is_valid()
 
+
 class DosageSequence:
     def __init__(self, soup=None):
         self.dosage = None
@@ -346,8 +353,14 @@ def choose_dosage(soup):
         dosage = LastingDosage(soup.lastingDosage)
     elif soup.dailyDosage:
         dosage = DailyDosage(soup.dailyDosage)
-    else:
+    elif soup.WeeklyDosage:
         dosage = WeeklyDosage(soup.weeklyDosage)
+    elif soup.SingleDoseAtTimeList:
+        dosage = SingleDoseAtTimeList(soup.singleDoseAtTimeList)
+    elif soup.SimpleDoseList:
+        dosage = SimpleDoseList(soup.simpleDoseList)
+    else:
+        raise RuntimeError("Invalid dosage type")
     return dosage
 
 
@@ -355,18 +368,15 @@ class FormulationAndRoute:
     formulation: str
     administrationName: str
     administrationRoute: str
-    absorptionModel: str
 
     def __init__(self, soup=None):
         self.formulation = ''
         self.administrationName = ''
         self.administrationRoute = ''
-        self.absorptionModel = ''
         if soup is not None:
             self.formulation = soup.formulation.string
             self.administrationName = soup.administrationName.string
             self.administrationRoute = soup.administrationRoute.string
-            self.absorptionModel = soup.absorptionModel.string
 
 
 class Dose:
@@ -386,6 +396,62 @@ class Dose:
 
     def get_infusion_time_in_minutes(self):
         return self.infusionTimeInMinutes.total_seconds() // 60
+
+
+class SimpleDoseList:
+    doseDateValues: list[tuple[datetime, timedelta, float]]
+    doseUnit: str
+    formulationAndRoute: FormulationAndRoute
+
+    def __init__(self, soup=None):
+        self.doseDateValues = []
+        self.doseUnit = ""
+        self.formulationAndRoute = FormulationAndRoute()
+        if soup is not None:
+            self.doseUnit = soup.doseUnit.string
+            self.formulationAndRoute = FormulationAndRoute(soup.formulationAndRoute)
+            for dose in soup.doseList.find_all("doseDateValue"):
+                self.doseDateValues.append((dose.doseDate,
+                                            dose.infusionTime,
+                                            dose.value))
+
+    def add_dose(self, doseDateValue: tuple[datetime, timedelta, float]):
+        self.doseDateValues.append(doseDateValue)
+
+
+class SingleDoseAtTime:
+    doseDate: datetime
+    infusionTime: timedelta
+    doseValue: float
+    doseUnit: str
+    formulationAndRoute: FormulationAndRoute
+
+    def __init__(self, soup=None):
+        self.doseDate = str_to_datetime("1111-11-11T11:11:11")
+        self.infusionTime = str_to_time('00:00:00')
+        self.doseValue = 0
+        self.doseUnit = ""
+        self.formulationAndRoute = FormulationAndRoute()
+        if soup is not None:
+            self.doseDate = str_to_datetime(soup.doseDate.string)
+            infusion = soup.infusionTimeInMinutes.string
+            self.infusionTime = timedelta(minutes=float(infusion))
+            self.doseValue = float(soup.doseValue.string)
+            self.doseUnit = soup.doseUnit.string
+            self.formulationAndRoute = FormulationAndRoute(soup.formulationAndRoute)
+
+
+class SingleDoseAtTimeList:
+    doseList: list[SingleDoseAtTime]
+
+    def __init__(self, soup=None):
+        self.doseList = []
+        if soup is not None:
+            for dose in soup.find_all("singleDoseAtTime"):
+                self.doseList.append(dose)
+
+    def add_dose(self, dose: SingleDoseAtTime):
+        self.doseList.append(dose)
 
 
 class LastingDosage:

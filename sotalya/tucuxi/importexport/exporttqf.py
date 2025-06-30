@@ -7,6 +7,7 @@ import xml.dom.minidom
 from ..data.query import *
 
 from ..data.requests import *
+from ..data.xpertrequests import *
 from ..tucuxi.utils import timedelta_to_str
 # PredictionTraits, PredictionAtTimesTraits, PredictionAtSampleTimesTraits, \
 #     PercentilesTraits, AdjustmentTraits
@@ -49,19 +50,16 @@ tqf_template = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
     </drugTreatment>
     <!-- List of the requests we want the server to take care of -->
     <requests></requests>
-	
+
 </query>
 '''
 
 class ExportTqf:
     def __init__(self):
-        print('create a TQF exporter')
         self.soup = None
 
 
     def export_to_string(self, query: Query, template_filename: str = ''):
-        print('exporting a TQF')
-
         if template_filename == '':
             content = tqf_template
         else:
@@ -93,6 +91,10 @@ class ExportTqf:
 
         for request in query.requests:
             req = self.create_request(request)
+            self.soup.query.requests.append(req)
+
+        for xpertrequest in query.xpertrequests:
+            req = self.create_xpertrequest(xpertrequest)
             self.soup.query.requests.append(req)
 
         xmlout = str(self.soup)
@@ -141,27 +143,35 @@ class ExportTqf:
 
     def create_computing_option(self, request):
         computing_option = self.soup.new_tag('computingOption')
-        computing_option.append(self.create_single_node('parametersType', request.computingOption.parametersType.value))
+        computing_option.append(self.create_single_node('parametersType',
+                                                        request.computingOption.parametersType.value))
         computing_option.append(self.create_single_node('compartmentOption',
                                                         request.computingOption.compartmentOption.value))
         computing_option.append(
-            self.create_single_boolean_node('retrieveStatistics', request.computingOption.retrieveStatistics))
+            self.create_single_boolean_node('retrieveStatistics',
+                                            request.computingOption.retrieveStatistics))
         computing_option.append(
-            self.create_single_boolean_node('retrieveParameters', request.computingOption.retrieveParameters))
+            self.create_single_boolean_node('retrieveParameters',
+                                            request.computingOption.retrieveParameters))
         computing_option.append(
-            self.create_single_boolean_node('retrieveCovariates', request.computingOption.retrieveCovariates))
+            self.create_single_boolean_node('retrieveCovariates',
+                                            request.computingOption.retrieveCovariates))
         return computing_option
 
     def create_options(self, request):
         options = self.soup.new_tag('options')
-        options.append(self.create_single_node('bestCandidatesOption', request.options.bestCandidatesOption.value))
-        options.append(self.create_single_node('loadingOption', request.options.loadingOption.value))
-        options.append(self.create_single_node('restPeriodOption', request.options.restPeriodOption.value))
+        options.append(self.create_single_node('bestCandidatesOption',
+                                               request.options.bestCandidatesOption.value))
+        options.append(self.create_single_node('loadingOption',
+                                               request.options.loadingOption.value))
+        options.append(self.create_single_node('restPeriodOption',
+                                               request.options.restPeriodOption.value))
         options.append(self.create_single_node('steadyStateTargetOption',
                                                request.options.steadyStateTargetOption.value))
-        options.append(self.create_single_node('targetExtractionOption', request.options.targetExtractionOption.value))
-        options.append(self.create_single_node(
-            'formulationAndRouteSelectionOption', request.options.formulationAndRouteSelectionOption.value))
+        options.append(self.create_single_node('targetExtractionOption',
+                                               request.options.targetExtractionOption.value))
+        options.append(self.create_single_node('formulationAndRouteSelectionOption',
+                                               request.options.formulationAndRouteSelectionOption.value))
         return options
 
     def create_percentile_ranks_type(self, request: PercentilesTraits):
@@ -172,8 +182,10 @@ class ExportTqf:
 
     def create_date_interval(self, request):
         date_interval = self.soup.new_tag('dateInterval')
-        date_interval.append(self.create_single_node_date('start', request.dateInterval.startDate))
-        date_interval.append(self.create_single_node_date('end', request.dateInterval.endDate))
+        date_interval.append(self.create_single_node_date('start',
+                                                          request.dateInterval.startDate))
+        date_interval.append(self.create_single_node_date('end',
+                                                          request.dateInterval.endDate))
 
         return date_interval
 
@@ -237,6 +249,32 @@ class ExportTqf:
 
         return req
 
+    def create_xpertrequest(self, xpertrequest):
+        req = self.soup.new_tag('xpertRequest')
+        req.append(self.create_single_node('drugId', xpertrequest.drugId))
+        req.append(self.create_single_node('configId',
+                                           xpertrequest.drugModelId))
+        out_tag = self.soup.new_tag('output')
+        req.append(out_tag)
+        out_tag.append(self.create_single_node('format',
+                                               xpertrequest.output["format"]))
+        out_tag.append(self.create_single_node('language',
+                                               xpertrequest.output["language"]))
+        req.append(self.create_single_node('adjustmentDate',
+                                           xpertrequest.adjustmentDate))
+        opt_tag = self.soup.new_tag('options')
+        req.append(opt_tag)
+        opt_tag.append(self.create_single_node('loadingOption',
+                                               xpertrequest.options["loadingOption"]))
+        opt_tag.append(self.create_single_node('restPeriodOption',
+                                               xpertrequest.options["restPeriodOption"]))
+        opt_tag.append(self.create_single_node('targetExtractionOption',
+                                               xpertrequest.options["targetExtractionOption"]))
+        opt_tag.append(self.create_single_node('formulationAndRouteSelectionOption',
+                                               xpertrequest.options["formulationAndRouteSelectionOption"]))
+
+        return req
+
     def create_covariate(self, covariate):
         cov = self.soup.new_tag('covariate')
         cov.append(self.create_single_node('covariateId', covariate.covariateId))
@@ -265,35 +303,103 @@ class ExportTqf:
         return sam
 
     def create_simple_dosage_with_interval(self, the_dose):
-
         dosage_time_range = self.soup.new_tag('dosageTimeRange')
         dosage_time_range.append(self.create_single_node_date('start', the_dose.start))
         dosage_time_range.append(self.create_single_node_date('end', the_dose.end))
 
-        lasting_dosage = self.soup.new_tag('lastingDosage')
-        tag_interval = self.soup.new_tag('interval')
-        tag_interval.string = timedelta_to_str(the_dose.dosage.interval)
-        lasting_dosage.append(tag_interval)
-        dose = self.soup.new_tag('dose')
-        dose.append(self.create_single_node_double('value', the_dose.dosage.dose.value))
-        dose.append(self.create_single_node_double('unit', the_dose.dosage.dose.unit))
-        # Todo : manage units for this
-        dose.append(self.create_single_node_double('infusionTimeInMinutes', the_dose.dosage.dose.get_infusion_time_in_minutes()))
-        lasting_dosage.append(dose)
+        if isinstance(the_dose.dosage, SingleDoseAtTimeList):
+            singleDoseListTag = self.soup.new_tag('singleDoseAtTimeList')
+            for singleDose in the_dose.dosage.doseList:
+                singleDoseTag = self.soup.new_tag('singleDoseAtTime')
+                singleDoseTag.append(self.create_single_node_date('doseDate',
+                                                                  singleDose.doseDate))
+                doseTag = self.soup.new_tag('dose')
+                doseTag.append(self.create_single_node_double('value',
+                                                              singleDose.doseValue))
+                doseTag.append(self.create_single_node_double('infusionTimeInMinutes',
+                                                              singleDose.infusionTime))
+                doseTag.append(self.create_single_node_double('unit',
+                                                              singleDose.doseUnit))
+                singleDoseTag.append(doseTag)
+                formulation_and_route = self.soup.new_tag('formulationAndRoute')
+                formulation_and_route.append(
+                    self.create_single_node('formulation',
+                                            singleDose.formulationAndRoute.formulation)
+                )
+                formulation_and_route.append(
+                    self.create_single_node('administrationName',
+                                            singleDose.formulationAndRoute.administrationName)
+                )
+                formulation_and_route.append(
+                    self.create_single_node('administrationRoute',
+                                            singleDose.formulationAndRoute.administrationRoute)
+                )
+                singleDoseTag.append(formulation_and_route)
+                singleDoseListTag.append(singleDoseTag)
+            dosage = self.soup.new_tag('dosage')
+            dosage.append(singleDoseListTag)
+            dosage_time_range.append(dosage)
 
-        formulation_and_route = self.soup.new_tag('formulationAndRoute')
-        formulation_and_route.append(self.create_single_node('formulation', the_dose.dosage.formulationAndRoute.formulation))
-        formulation_and_route.append(self.create_single_node('administrationName',
-                                                             the_dose.dosage.formulationAndRoute.administrationName))
-        formulation_and_route.append(self.create_single_node('administrationRoute',
-                                                             the_dose.dosage.formulationAndRoute.administrationRoute))
-        formulation_and_route.append(self.create_single_node('absorptionModel',
-                                                             the_dose.dosage.formulationAndRoute.absorptionModel))
-        lasting_dosage.append(formulation_and_route)
+        elif isinstance(the_dose.dosage, SimpleDoseList):
+            simpleDoseListTag = self.soup.new_tag('simpleDoseList')
+            simpleDoseListTag.append(self.create_single_node_double('unit',
+                                                                    the_dose.dosage.doseUnit))
+            formulation_and_route = self.soup.new_tag('formulationAndRoute')
+            formulation_and_route.append(
+                self.create_single_node('formulation',
+                                        the_dose.dosage.formulationAndRoute.formulation)
+            )
+            formulation_and_route.append(
+                self.create_single_node('administrationName',
+                                        the_dose.dosage.formulationAndRoute.administrationName)
+            )
+            formulation_and_route.append(
+                self.create_single_node('administrationRoute',
+                                        the_dose.dosage.formulationAndRoute.administrationRoute)
+            )
+            simpleDoseListTag.append(formulation_and_route)
 
-        dosage_loop = self.soup.new_tag('dosageLoop')
-        dosage_loop.append(lasting_dosage)
-        dosage = self.soup.new_tag('dosage')
-        dosage.append(dosage_loop)
-        dosage_time_range.append(dosage)
+            doseListTag = self.soup.new_tag('doseList')
+            for doseDateValue in the_dose.dosage.doseDateValues:
+                doseDateValueTag = self.soup.new_tag('doseDateValue')
+                doseDateValueTag.append(self.create_single_node_date('doseDate',
+                                                                     doseDateValue[0]))
+                doseDateValueTag.append(self.create_single_node_double('infusionTimeInMinutes',
+                                                                       doseDateValue[1]))
+                doseDateValueTag.append(self.create_single_node_double('value',
+                                                                       doseDateValue[2]))
+                doseListTag.append(doseDateValueTag)
+            simpleDoseListTag.append(doseListTag)
+            dosage = self.soup.new_tag('dosage')
+            dosage.append(simpleDoseListTag)
+            dosage_time_range.append(dosage)
+
+        else:
+            lasting_dosage = self.soup.new_tag('lastingDosage')
+            tag_interval = self.soup.new_tag('interval')
+            tag_interval.string = timedelta_to_str(the_dose.dosage.interval)
+            lasting_dosage.append(tag_interval)
+            dose = self.soup.new_tag('dose')
+            dose.append(self.create_single_node_double('value', the_dose.dosage.dose.value))
+            dose.append(self.create_single_node_double('unit', the_dose.dosage.dose.unit))
+            # Todo : manage units for this
+            dose.append(self.create_single_node_double('infusionTimeInMinutes',
+                                                       the_dose.dosage.dose.get_infusion_time_in_minutes()))
+            lasting_dosage.append(dose)
+
+            formulation_and_route = self.soup.new_tag('formulationAndRoute')
+            formulation_and_route.append(self.create_single_node('formulation',
+                                                                 the_dose.dosage.formulationAndRoute.formulation))
+            formulation_and_route.append(self.create_single_node('administrationName',
+                                                                 the_dose.dosage.formulationAndRoute.administrationName))
+            formulation_and_route.append(self.create_single_node('administrationRoute',
+                                                                 the_dose.dosage.formulationAndRoute.administrationRoute))
+            lasting_dosage.append(formulation_and_route)
+
+            dosage_loop = self.soup.new_tag('dosageLoop')
+            dosage_loop.append(lasting_dosage)
+            dosage = self.soup.new_tag('dosage')
+            dosage.append(dosage_loop)
+            dosage_time_range.append(dosage)
+
         return dosage_time_range
