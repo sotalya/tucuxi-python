@@ -19,9 +19,9 @@ The python module can be build using pip. Currently two way are available.
   ```
 - The second one will be to install the package using the git link directly with pip install \
   ```
-   $ pip install https://github.com/sotalya/tucuxi-python.git
+   $ pip install git+https://github.com/sotalya/tucuxi-python.git
   ```
-  
+
 Moreover, a setup.bat and setup.sh are available to directly install the package.
 
 <sup>**NOTE: The ways of installing explained above will install the package as a global one. So, if you want to install it inside a virtual environment dont use them or from within the environment.**<sup>
@@ -35,5 +35,5 @@ install it by using the command `pip intall pytest`. Once the pytest package is 
     $ cd tests
     $ py -m pytest -v
   ```
-  
+
 <sup>**NOTE: In order to run the tests, it is necessary to have the repository cloned, as the package itself will not include this tests.**<sup>
