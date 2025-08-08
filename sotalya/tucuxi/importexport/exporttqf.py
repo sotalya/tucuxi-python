@@ -23,6 +23,10 @@ tqf_template = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <date></date> <!-- Date the xml has been sent -->
     <language>en</language>
 
+    <!-- Administrative data -->
+    <admin>
+    </admin>
+
     <drugTreatment>
         <!-- All the information regarding the patient -->
         <patient>
@@ -58,7 +62,6 @@ class ExportTqf:
     def __init__(self):
         self.soup = None
 
-
     def export_to_string(self, query: Query, template_filename: str = ''):
         if template_filename == '':
             content = tqf_template
@@ -70,6 +73,10 @@ class ExportTqf:
         self.soup.query.queryId.string = query.queryId
         self.soup.query.clientId.string = query.patientId
         self.soup.query.date.string = str(query.date)
+        if query.mandator:
+            self.soup.query.admin.append(self.create_mandator_admin(query.mandator))
+        if query.patient:
+            self.soup.query.admin.append(self.create_patient_admin(query.patient))
 
         for d in query.drugs:
             self.soup.query.drugs.drug.drugId.string = d.drugId
@@ -188,6 +195,262 @@ class ExportTqf:
                                                           request.dateInterval.endDate))
 
         return date_interval
+
+    def create_mandator_admin(self, mandator):
+        # Mandator.
+        mandatorTag = self.soup.new_tag('mandator')
+        mandatorPerson = self.soup.new_tag('person')
+        mandatorTag.append(mandatorPerson)
+        mandatorInstitute = self.soup.new_tag('institute')
+        mandatorTag.append(mandatorInstitute)
+
+        # Mandator - person.
+        mandatorPerson.append(
+            self.create_single_node_date('id',
+                                         mandator["person"].personId)
+        )
+        mandatorPerson.append(
+            self.create_single_node_date('title',
+                                         mandator["person"].title)
+        )
+        mandatorPerson.append(
+            self.create_single_node_date('firstName',
+                                         mandator["person"].firstName)
+        )
+        mandatorPerson.append(
+            self.create_single_node_date('lastName',
+                                         mandator["person"].lastName)
+        )
+
+        mandatorPersonAddress = self.soup.new_tag('address')
+        mandatorPerson.append(mandatorPersonAddress)
+        mandatorPersonAddress.append(
+            self.create_single_node_date('street',
+                                         mandator["person"].street)
+        )
+        mandatorPersonAddress.append(
+            self.create_single_node_date('postalCode',
+                                         mandator["person"].postalCode)
+        )
+        mandatorPersonAddress.append(
+            self.create_single_node_date('city',
+                                         mandator["person"].city)
+        )
+        mandatorPersonAddress.append(
+            self.create_single_node_date('state',
+                                         mandator["person"].state)
+        )
+        mandatorPersonAddress.append(
+            self.create_single_node_date('country',
+                                         mandator["person"].country)
+        )
+
+        mandatorPersonPhone = self.soup.new_tag('phone')
+        mandatorPerson.append(mandatorPersonPhone)
+        mandatorPersonPhone.append(
+            self.create_single_node_date('number',
+                                         mandator["person"].phoneNumber)
+        )
+        mandatorPersonPhone.append(
+            self.create_single_node_date('type',
+                                         mandator["person"].phoneType)
+        )
+
+        mandatorPersonEmail = self.soup.new_tag('email')
+        mandatorPerson.append(mandatorPersonEmail)
+        mandatorPersonEmail.append(
+            self.create_single_node_date('address',
+                                         mandator["person"].emailAddress)
+        )
+        mandatorPersonEmail.append(
+            self.create_single_node_date('type',
+                                         mandator["person"].emailType)
+        )
+
+        # Mandator - institute.
+        mandatorInstitute.append(
+            self.create_single_node_date('id',
+                                         mandator["institute"].instituteId)
+        )
+        mandatorInstitute.append(
+            self.create_single_node_date('name',
+                                         mandator["institute"].name)
+        )
+
+        mandatorInstituteAddress = self.soup.new_tag('address')
+        mandatorInstitute.append(mandatorInstituteAddress)
+        mandatorInstituteAddress.append(
+            self.create_single_node_date('street',
+                                         mandator["institute"].street)
+        )
+        mandatorInstituteAddress.append(
+            self.create_single_node_date('postalCode',
+                                         mandator["institute"].postalCode)
+        )
+        mandatorInstituteAddress.append(
+            self.create_single_node_date('city',
+                                         mandator["institute"].city)
+        )
+        mandatorInstituteAddress.append(
+            self.create_single_node_date('state',
+                                         mandator["institute"].state)
+        )
+        mandatorInstituteAddress.append(
+            self.create_single_node_date('country',
+                                         mandator["institute"].country)
+        )
+
+        mandatorInstitutePhone = self.soup.new_tag('phone')
+        mandatorInstitute.append(mandatorInstitutePhone)
+        mandatorInstitutePhone.append(
+            self.create_single_node_date('number',
+                                         mandator["institute"].phoneNumber)
+        )
+        mandatorInstitutePhone.append(
+            self.create_single_node_date('type',
+                                         mandator["institute"].phoneType)
+        )
+
+        mandatorInstituteEmail = self.soup.new_tag('email')
+        mandatorInstitute.append(mandatorInstituteEmail)
+        mandatorInstituteEmail.append(
+            self.create_single_node_date('address',
+                                         mandator["institute"].emailAddress)
+        )
+        mandatorInstituteEmail.append(
+            self.create_single_node_date('type',
+                                         mandator["institute"].emailType)
+        )
+
+        return mandatorTag
+
+    def create_patient_admin(self, patient):
+        # Patient.
+        patientTag = self.soup.new_tag('patient')
+        patientPerson = self.soup.new_tag('person')
+        patientTag.append(patientPerson)
+        patientInstitute = self.soup.new_tag('institute')
+        patientTag.append(patientInstitute)
+
+        # Patient - person.
+        patientPerson.append(
+            self.create_single_node_date('id',
+                                         patient["person"].personId)
+        )
+        patientPerson.append(
+            self.create_single_node_date('title',
+                                         patient["person"].title)
+        )
+        patientPerson.append(
+            self.create_single_node_date('firstName',
+                                         patient["person"].firstName)
+        )
+        patientPerson.append(
+            self.create_single_node_date('lastName',
+                                         patient["person"].lastName)
+        )
+
+        patientPersonAddress = self.soup.new_tag('address')
+        patientPerson.append(patientPersonAddress)
+        patientPersonAddress.append(
+            self.create_single_node_date('street',
+                                         patient["person"].street)
+        )
+        patientPersonAddress.append(
+            self.create_single_node_date('postalCode',
+                                         patient["person"].postalCode)
+        )
+        patientPersonAddress.append(
+            self.create_single_node_date('city',
+                                         patient["person"].city)
+        )
+        patientPersonAddress.append(
+            self.create_single_node_date('state',
+                                         patient["person"].state)
+        )
+        patientPersonAddress.append(
+            self.create_single_node_date('country',
+                                         patient["person"].country)
+        )
+
+        patientPersonPhone = self.soup.new_tag('phone')
+        patientPerson.append(patientPersonPhone)
+        patientPersonPhone.append(
+            self.create_single_node_date('number',
+                                         patient["person"].phoneNumber)
+        )
+        patientPersonPhone.append(
+            self.create_single_node_date('type',
+                                         patient["person"].phoneType)
+        )
+
+        patientPersonEmail = self.soup.new_tag('email')
+        patientPerson.append(patientPersonEmail)
+        patientPersonEmail.append(
+            self.create_single_node_date('address',
+                                         patient["person"].emailAddress)
+        )
+        patientPersonEmail.append(
+            self.create_single_node_date('type',
+                                         patient["person"].emailType)
+        )
+
+        # Patient - institute.
+        patientInstitute.append(
+            self.create_single_node_date('id',
+                                         patient["institute"].instituteId)
+        )
+        patientInstitute.append(
+            self.create_single_node_date('name',
+                                         patient["institute"].name)
+        )
+
+        patientInstituteAddress = self.soup.new_tag('address')
+        patientInstitute.append(patientInstituteAddress)
+        patientInstituteAddress.append(
+            self.create_single_node_date('street',
+                                         patient["institute"].street)
+        )
+        patientInstituteAddress.append(
+            self.create_single_node_date('postalCode',
+                                         patient["institute"].postalCode)
+        )
+        patientInstituteAddress.append(
+            self.create_single_node_date('city',
+                                         patient["institute"].city)
+        )
+        patientInstituteAddress.append(
+            self.create_single_node_date('state',
+                                         patient["institute"].state)
+        )
+        patientInstituteAddress.append(
+            self.create_single_node_date('country',
+                                         patient["institute"].country)
+        )
+
+        patientInstitutePhone = self.soup.new_tag('phone')
+        patientInstitute.append(patientInstitutePhone)
+        patientInstitutePhone.append(
+            self.create_single_node_date('number',
+                                         patient["institute"].phoneNumber)
+        )
+        patientInstitutePhone.append(
+            self.create_single_node_date('type',
+                                         patient["institute"].phoneType)
+        )
+
+        patientInstituteEmail = self.soup.new_tag('email')
+        patientInstitute.append(patientInstituteEmail)
+        patientInstituteEmail.append(
+            self.create_single_node_date('address',
+                                         patient["institute"].emailAddress)
+        )
+        patientInstituteEmail.append(
+            self.create_single_node_date('type',
+                                         patient["institute"].emailType)
+        )
+
+        return patientTag
 
     def create_request(self, request):
         req = self.soup.new_tag('request')
