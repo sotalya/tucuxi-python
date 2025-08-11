@@ -3,6 +3,8 @@
 from datetime import datetime, timedelta, time
 from colorama import Fore
 from ..tucuxi.utils import str_to_datetime, str_to_time
+from ..data.admin import Institute
+from ..data.admin import Person
 from ..data.requests import Request
 from ..data.xpertrequests import XpertRequest
 from typing import List
@@ -20,6 +22,8 @@ class Query:
         self.queryId = ''
         self.patientId = ''
         self.date = str_to_datetime("1111-11-11T11:11:11")
+        self.mandator = {}
+        self.patient = {}
         self.covariates = []
         self.drugs = []
         self.requests = []
@@ -27,6 +31,14 @@ class Query:
 
         if soup is not None:
             self.queryId = soup.query.queryId.string
+
+            if soup.query.mandator:
+                self.mandator["institute"] = Institute.create_from_soup(soup.query.admin.mandator.institute)
+                self.mandator["person"] = Person.create_from_soup(soup.query.admin.mandator.person)
+            if soup.query.patient:
+                self.patient["institute"] = Institute.create_from_soup(soup.query.admin.patient.institute)
+                self.patient["person"] = Person.create_from_soup(soup.query.admin.patient.person)
+
             for cov in soup.drugTreatment.patient.covariates.find_all('covariate'):
                 self.covariates.append(Covariate(cov))
 
