@@ -32,12 +32,13 @@ class Query:
         if soup is not None:
             self.queryId = soup.query.queryId.string
 
-            if soup.query.mandator:
-                self.mandator["institute"] = Institute.create_from_soup(soup.query.admin.mandator.institute)
-                self.mandator["person"] = Person.create_from_soup(soup.query.admin.mandator.person)
-            if soup.query.patient:
-                self.patient["institute"] = Institute.create_from_soup(soup.query.admin.patient.institute)
-                self.patient["person"] = Person.create_from_soup(soup.query.admin.patient.person)
+            if soup.query.admin:
+                if soup.query.admin.mandator:
+                    self.mandator["institute"] = Institute.create_from_soup(soup.query.admin.mandator.institute)
+                    self.mandator["person"] = Person.create_from_soup(soup.query.admin.mandator.person)
+                if soup.query.patient:
+                    self.patient["institute"] = Institute.create_from_soup(soup.query.admin.patient.institute)
+                    self.patient["person"] = Person.create_from_soup(soup.query.admin.patient.person)
 
             for cov in soup.drugTreatment.patient.covariates.find_all('covariate'):
                 self.covariates.append(Covariate(cov))
