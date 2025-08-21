@@ -381,30 +381,25 @@ class FormulationAndRoute:
     formulation: str
     administrationName: str
     administrationRoute: str
-    absorptionModel: str
 
     def __init__(self, soup=None):
         self.formulation = ''
         self.administrationName = ''
         self.administrationRoute = ''
-        self.absorptionModel = ''
         if soup is not None:
             self.formulation = soup.formulation.string
             self.administrationName = soup.administrationName.string
             self.administrationRoute = soup.administrationRoute.string
-            self.absorptionModel = soup.absorptionModel.string
 
     @staticmethod
     def create_formulation_and_route(
             formulation: str,
             administrationName: str,
-            administrationRoute: str,
-            absorptionModel: str=''):
+            administrationRoute: str):
         formulation_and_route = FormulationAndRoute()
         formulation_and_route.formulation = formulation
         formulation_and_route.administrationName = administrationName
         formulation_and_route.administrationRoute = administrationRoute
-        formulation_and_route.absorptionModel = absorptionModel
         return formulation_and_route
 
 

@@ -132,7 +132,6 @@ class PRDose:
         self.formulation = None
         self.administrationName = None
         self.administrationRoute = None
-        self.absorptionModel = None
 
     def is_valid(self):
         if not(type(self.doseValue) is str):
@@ -185,12 +184,6 @@ class PRDose:
             print(Fore.RED + "Dose administrationRoute is empty")
             return False
 
-        if not(type(self.absorptionModel) is str):
-            print(Fore.RED + "absorptionModel " + str(self.absorptionModel) + ": absorptionModel is not a string")
-            return False
-        if self.absorptionModel == '':
-            print(Fore.RED + "Dose absorptionModel is empty")
-            return False
         return True
 
 

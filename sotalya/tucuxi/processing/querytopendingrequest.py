@@ -187,7 +187,6 @@ class QueryToPendingRequest:
                 dose = PRDose()
                 dose.doseUnit = dtr.dosage.dose.unit
                 dose.doseValue = dtr.dosage.dose.value
-                dose.absorptionModel = dtr.dosage.formulationAndRoute.absorptionModel
                 dose.administrationRoute = dtr.dosage.formulationAndRoute.administrationRoute
                 dose.administrationName = dtr.dosage.formulationAndRoute.administrationName
                 dose.formulation = dtr.dosage.formulationAndRoute.formulation
