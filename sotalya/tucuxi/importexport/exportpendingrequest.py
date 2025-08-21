@@ -349,14 +349,18 @@ class ExportPendingRequest:
         self.soup.data.dataset.patient.find("contact").postcode.string = pending_request.patient.postcode
         self.soup.data.dataset.patient.find("contact").state.string = pending_request.patient.state
         self.soup.data.dataset.patient.find("contact").country.string = pending_request.patient.country
+        email_tag = self.soup.new_tag("email")
         email_addr = self.create_single_node("address", pending_request.patient.email_address)
         email_type = self.create_single_node("type", pending_request.patient.email_type)
-        self.soup.data.dataset.patient.find("contact").emails.append(email_addr)
-        self.soup.data.dataset.patient.find("contact").emails.append(email_type)
+        email_tag.append(email_addr)
+        email_tag.append(email_type)
+        self.soup.data.dataset.patient.find("contact").emails.append(email_tag)
+        phone_tag = self.soup.new_tag("phone")
         phone_number = self.create_single_node("number", pending_request.patient.phone_number)
         phone_type = self.create_single_node("type", pending_request.patient.phone_type)
-        self.soup.data.dataset.patient.find("contact").phones.append(phone_number)
-        self.soup.data.dataset.patient.find("contact").phones.append(phone_type)
+        phone_tag.append(phone_number)
+        phone_tag.append(phone_type)
+        self.soup.data.dataset.patient.find("contact").phones.append(phone_tag)
 
         self.soup.data.dataset.patient.find("institute").instituteId.string = pending_request.patient.institute.instituteId
         self.soup.data.dataset.patient.find("institute").find("name").string = pending_request.patient.institute.name
@@ -365,14 +369,18 @@ class ExportPendingRequest:
         self.soup.data.dataset.patient.find("institute").find("contact").postcode.string = pending_request.patient.institute.postcode
         self.soup.data.dataset.patient.find("institute").find("contact").state.string = pending_request.patient.institute.state
         self.soup.data.dataset.patient.find("institute").find("contact").country.string = pending_request.patient.institute.country
+        email_tag = self.soup.new_tag("email")
         email_addr = self.create_single_node("address", pending_request.patient.institute.email_address)
         email_type = self.create_single_node("type", pending_request.patient.institute.email_type)
-        self.soup.data.dataset.patient.find("institute").find("contact").emails.append(email_addr)
-        self.soup.data.dataset.patient.find("institute").find("contact").emails.append(email_type)
+        email_tag.append(email_addr)
+        email_tag.append(email_type)
+        self.soup.data.dataset.patient.find("institute").find("contact").emails.append(email_tag)
+        phone_tag = self.soup.new_tag("phone")
         phone_number = self.create_single_node("number", pending_request.patient.institute.phone_number)
         phone_type = self.create_single_node("type", pending_request.patient.institute.phone_type)
-        self.soup.data.dataset.patient.find("institute").find("contact").phones.append(phone_number)
-        self.soup.data.dataset.patient.find("institute").find("contact").phones.append(phone_type)
+        phone_tag.append(phone_number)
+        phone_tag.append(phone_type)
+        self.soup.data.dataset.patient.find("institute").find("contact").phones.append(phone_tag)
 
         self.soup.data.dataset.mandator.find("name").firstName.string = pending_request.mandator.firstname
         self.soup.data.dataset.mandator.find("name").lastName.string = pending_request.mandator.lastname
@@ -381,14 +389,18 @@ class ExportPendingRequest:
         self.soup.data.dataset.mandator.find("contact").postcode.string = pending_request.mandator.postcode
         self.soup.data.dataset.mandator.find("contact").state.string = pending_request.mandator.state
         self.soup.data.dataset.mandator.find("contact").country.string = pending_request.mandator.country
+        email_tag = self.soup.new_tag("email")
         email_addr = self.create_single_node("address", pending_request.mandator.email_address)
         email_type = self.create_single_node("type", pending_request.mandator.email_type)
-        self.soup.data.dataset.mandator.find("contact").emails.append(email_addr)
-        self.soup.data.dataset.mandator.find("contact").emails.append(email_type)
+        email_tag.append(email_addr)
+        email_tag.append(email_type)
+        self.soup.data.dataset.mandator.find("contact").emails.append(email_tag)
+        phone_tag = self.soup.new_tag("phone")
         phone_number = self.create_single_node("number", pending_request.mandator.phone_number)
         phone_type = self.create_single_node("type", pending_request.mandator.phone_type)
-        self.soup.data.dataset.mandator.find("contact").phones.append(phone_number)
-        self.soup.data.dataset.mandator.find("contact").phones.append(phone_type)
+        phone_tag.append(phone_number)
+        phone_tag.append(phone_type)
+        self.soup.data.dataset.mandator.find("contact").phones.append(phone_tag)
 
         self.soup.data.dataset.mandator.find("institute").instituteId.string = pending_request.mandator.institute.instituteId
         self.soup.data.dataset.mandator.find("institute").find("name").string = pending_request.mandator.institute.name
@@ -397,15 +409,18 @@ class ExportPendingRequest:
         self.soup.data.dataset.mandator.find("institute").find("contact").postcode.string = pending_request.mandator.institute.postcode
         self.soup.data.dataset.mandator.find("institute").find("contact").state.string = pending_request.mandator.institute.state
         self.soup.data.dataset.mandator.find("institute").find("contact").country.string = pending_request.mandator.institute.country
+        email_tag = self.soup.new_tag("email")
         email_addr = self.create_single_node("address", pending_request.mandator.institute.email_address)
         email_type = self.create_single_node("type", pending_request.mandator.institute.email_type)
-        self.soup.data.dataset.mandator.find("institute").find("contact").emails.append(email_addr)
-        self.soup.data.dataset.mandator.find("institute").find("contact").emails.append(email_type)
+        email_tag.append(email_addr)
+        email_tag.append(email_type)
+        self.soup.data.dataset.mandator.find("institute").find("contact").emails.append(email_tag)
+        phone_tag = self.soup.new_tag("phone")
         phone_number = self.create_single_node("number", pending_request.mandator.institute.phone_number)
         phone_type = self.create_single_node("type", pending_request.mandator.institute.phone_type)
-        self.soup.data.dataset.mandator.find("institute").find("contact").phones.append(phone_number)
-        self.soup.data.dataset.mandator.find("institute").find("contact").phones.append(phone_type)
-
+        phone_tag.append(phone_number)
+        phone_tag.append(phone_type)
+        self.soup.data.dataset.mandator.find("institute").find("contact").phones.append(phone_tag)
 
         xmlout = str(self.soup)
 
