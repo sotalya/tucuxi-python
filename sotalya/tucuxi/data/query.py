@@ -391,6 +391,18 @@ class FormulationAndRoute:
             self.administrationName = soup.administrationName.string
             self.administrationRoute = soup.administrationRoute.string
 
+    @staticmethod
+    def create_formulation_and_route(
+            formulation: str,
+            administrationName: str,
+            administrationRoute: str):
+        formulation_and_route = FormulationAndRoute()
+        formulation_and_route.formulation = formulation
+        formulation_and_route.administrationName = administrationName
+        formulation_and_route.administrationRoute = administrationRoute
+        return formulation_and_route
+
+
 
 class Dose:
     value: float
@@ -406,6 +418,19 @@ class Dose:
             self.unit = soup.unit.string
             infusion = soup.infusionTimeInMinutes.string
             self.infusionTimeInMinutes = timedelta(minutes=float(infusion))
+
+    @staticmethod
+    def create_dose(
+            value: float,
+            unit: str,
+            infusionTimeInMinutes: timedelta,
+    ):
+        dose = Dose()
+        dose.value = value
+        dose.unit = unit
+        dose.infusionTimeInMinutes = infusionTimeInMinutes
+        return dose
+
 
     def get_infusion_time_in_minutes(self):
         return self.infusionTimeInMinutes.total_seconds() // 60
@@ -481,6 +506,18 @@ class LastingDosage:
             self.dose = Dose(soup.dose)
             self.formulationAndRoute = FormulationAndRoute(soup.formulationAndRoute)
 
+    @staticmethod
+    def create_lasting_dosage(
+            interval: timedelta,
+            dose: Dose,
+            formulationAndRoute: FormulationAndRoute,
+    ):
+        dosage = LastingDosage()
+        dosage.interval = interval
+        dosage.dose = dose
+        dosage.formulationAndRoute = formulationAndRoute
+        return dosage
+
     def is_valid(self)-> bool:
         if not (type(self.interval) is time):
             print(Fore.RED + "Dosage interval invalid")
@@ -500,6 +537,18 @@ class DailyDosage:
             self.time = str_to_time(soup.time.string)
             self.dose = Dose(soup.dose)
             self.formulationAndRoute = FormulationAndRoute(soup.formulationAndRoute)
+
+    @staticmethod
+    def create_daily_dosage(
+            time: timedelta,
+            dose: Dose,
+            formulationAndRoute: FormulationAndRoute,
+    ):
+        dosage = DailyDosage()
+        dosage.time = time
+        dosage.dose = dose
+        dosage.formulationAndRoute = formulationAndRoute
+        return dosage
 
     def is_valid(self)-> bool:
         if not (type(self.time) is time):
