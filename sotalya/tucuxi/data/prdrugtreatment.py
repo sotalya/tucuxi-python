@@ -226,6 +226,7 @@ class PRDrugTreatment:
     def __init__(self):
         self.drugId = ''
         self.activePrinciple = ''
+        self.brandName = ''
         self.samples = []  # Must contain objects of type Sample
         self.targets = []  # Must contain objects of type Target
         self.dosages = []  # Must contain objects of type related to Dosage

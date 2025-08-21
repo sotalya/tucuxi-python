@@ -6,9 +6,21 @@ from colorama import Fore
 from ..data.query import *
 
 
-class Mandator:
+class PRMandator:
     def __init__(self):
-        self.name = ''
+        self.firstname = ''
+        self.lastname = ''
+        self.address = ''
+        self.city = ''
+        self.postcode = ''
+        self.state = ''
+        self.country = ''
+        self.email_address = ''
+        self.email_type = ''
+        self.phone_number = ''
+        self.phone_type = ''
+        self.institute = PRInstitute()
+
 
     def is_valid(self):
         if not(type(self.name) is str):
@@ -17,11 +29,36 @@ class Mandator:
         return True
 
 
-class Patient:
+class PRInstitute:
+    def __init__(self):
+        self.instituteId = ''
+        self.name = ''
+        self.address = ''
+        self.city = ''
+        self.postcode = ''
+        self.state = ''
+        self.country = ''
+        self.email_address = ''
+        self.email_type = ''
+        self.phone_number = ''
+        self.phone_type = ''
+
+
+class PRPatient:
     def __init__(self):
         self.firstname = ''
         self.lastname = ''
         self.patientId = ''
+        self.address = ''
+        self.city = ''
+        self.postcode = ''
+        self.state = ''
+        self.country = ''
+        self.email_address = ''
+        self.email_type = ''
+        self.phone_number = ''
+        self.phone_type = ''
+        self.institute = PRInstitute()
 
     def is_valid(self):
         if not(type(self.patientId) is str):
@@ -55,8 +92,8 @@ class Clinical:
 class PendingRequest:
     requestId: str
     drugTreatment: DrugTreatment
-    patient: Patient
-    mandator: Mandator
+    patient: PRPatient
+    mandator: PRMandator
     requestId: str
     requestState: str
     clinicals: List[Clinical]
