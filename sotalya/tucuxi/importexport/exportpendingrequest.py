@@ -195,7 +195,7 @@ pending_request_template = '''<?xml version="1.0"?>
 
 class ExportPendingRequest:
     def __init__(self):
-        print('create a Pending request exporter')
+        # print('create a Pending request exporter')
         self.soup = None
 
     def create_single_node(self, tag_name, tag_value):
@@ -227,9 +227,7 @@ class ExportPendingRequest:
         :param str filename: The path to the output file
         :param str template_filename: The path to the template file
         """
-
-        print('exporting the list of pending requests')
-
+        # print('exporting the list of pending requests')
         if template_filename == '':
             content = list_template
         else:
@@ -297,9 +295,7 @@ class ExportPendingRequest:
         :param str filename: The path to the output file
         :param str template_filename: The path to the template file
         """
-
-        print('exporting a pending request')
-
+        # print('exporting a pending request')
         if template_filename == '':
             content = pending_request_template
         else:

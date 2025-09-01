@@ -7,7 +7,8 @@ from ..data.pendingrequest import *
 class QueryToPendingRequest:
 
     def __init__(self):
-        print('create a translator from query to pending request')
+        # print('create a translator from query to pending request')
+        pass
 
     def timeToHours(self, t):
         s = t.split(':')

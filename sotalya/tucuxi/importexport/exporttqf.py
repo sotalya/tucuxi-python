@@ -72,7 +72,10 @@ class ExportTqf:
 
         self.soup.query.queryId.string = query.queryId
         self.soup.query.clientId.string = query.patientId
-        self.soup.query.date.string = str(query.date)
+        if not isinstance(query.date, str):
+            self.soup.query.date.string = str(query.date.strftime("%Y-%m-%dT%H:%M:%S"))
+        else:
+            self.soup.query.date.string = query.date
         if query.mandator:
             self.soup.query.admin.append(self.create_mandator_admin(query.mandator))
         if query.patient:

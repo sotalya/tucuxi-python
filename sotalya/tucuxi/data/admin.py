@@ -4,17 +4,17 @@ from dataclasses import dataclass
 
 @dataclass
 class Institute:
-    instituteId: str
-    name: str
-    street: str
-    postalCode: str
-    city: str
-    state: str
-    country: str
-    phoneNumber: str
-    phoneType: str
-    emailAddress: str
-    emailType: str
+    instituteId: str = ""
+    name: str = ""
+    street: str = ""
+    postalCode: str = ""
+    city: str = ""
+    state: str = ""
+    country: str = ""
+    phoneNumber: str = ""
+    phoneType: str = ""
+    emailAddress: str = ""
+    emailType: str = ""
 
     @staticmethod
     def create_from_soup(soup):
@@ -40,19 +40,19 @@ class Institute:
 
 @dataclass
 class Person:
-    personId: str
-    title: str
-    firstName: str
-    lastName: str
-    street: str
-    postalCode: str
-    city: str
-    state: str
-    country: str
-    phoneNumber: str
-    phoneType: str
-    emailAddress: str
-    emailType: str
+    personId: str = ""
+    title: str = ""
+    firstName: str = ""
+    lastName: str = ""
+    street: str = ""
+    postalCode: str = ""
+    city: str = ""
+    state: str = ""
+    country: str = ""
+    phoneNumber: str = ""
+    phoneType: str = ""
+    emailAddress: str = ""
+    emailType: str = ""
 
     @staticmethod
     def create_from_soup(soup):
