@@ -45,8 +45,8 @@ elseif (APPLE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
     add_compile_options(-Wno-deprecated-declarations)
 else (UNIX)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fsplit-stack -fno-lto -g")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fsplit-stack -fno-lto -g")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fsplit-stack -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fsplit-stack -g")
 endif (WIN32)
 
 # Set boost options
