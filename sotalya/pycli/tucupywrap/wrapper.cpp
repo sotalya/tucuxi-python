@@ -586,14 +586,12 @@ PYBIND11_MODULE(MODULE_NAME, handle) {
         // TODO -> Add parameter description and class description
         py::class_<Core::FormulationAndRoute>(handle, "FormulationAndRoute", R"pbdoc(
                   TODO -> Description)pbdoc")
-                .def(py::init<Core::Formulation, Core::AdministrationRoute, Core::AbsorptionModel, std::string>(), R"pbdoc(
+                .def(py::init<Core::Formulation, Core::AdministrationRoute, std::string>(), R"pbdoc(
                       formulation:
                       route:
-                      absorption_model:
                       administration_name: )pbdoc", 
                       py::arg("formulation"), 
-                      py::arg("route"), 
-                      py::arg("absorption_model"), 
+                      py::arg("route"),
                       py::arg("administration_name"));
 
         py::class_<Common::TimeOfDay>(handle, "TimeOfDay", R"pbdoc(
