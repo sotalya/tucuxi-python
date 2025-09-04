@@ -33,7 +33,7 @@ package. However, this package should be automatically installed with the instal
 install it by using the command `pip intall pytest`. Once the pytest package is installed, it is possible to run the tests using the following method:
   ```
     $ cd tests
-    $ py -m pytest -v
+    $ python -m pytest -v
   ```
 
 <sup>**NOTE: In order to run the tests, it is necessary to have the repository cloned, as the package itself will not include this tests.**<sup>
